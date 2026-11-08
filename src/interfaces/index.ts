@@ -1,33 +1,10 @@
-import { nameLogin, nameRegister } from "../types";
-
 export interface IRegisterInput {
-    name:nameRegister;
-    placeholder: string;
-    type: string;
-    validation: {
-        required?: boolean;
-        minLength?: number;
-        pattern?: RegExp;
-    }
-}
-export interface ILoginInput {
-    name:nameLogin;
-    placeholder: string;
-    type: string;
-    validation: {
-        required?: boolean;
-        minLength?: number;
-        pattern?: RegExp;
-    }
-}
-
-export interface IErrorMessage {
-    error:{
-        // deatils?:{
-        //     errors:{
-        //         message:string
-        //     }[];
-        // }
-        message?:string;
-    }
+  name: "username" | "email" | "password";
+  placeholder: string;
+  type: string;
+  validation: {
+    required?: boolean;
+    minLength?: number;
+    pattern?: RegExp;
+  };
 }

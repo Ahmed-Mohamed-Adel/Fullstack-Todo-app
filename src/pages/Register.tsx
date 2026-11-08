@@ -1,18 +1,10 @@
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-import { Link, useNavigate } from "react-router-dom";
 import InputErrorMessage from "../components/InputErrorMessage";
 import { REGISTER_FORM } from "../data";
-import { yupResolver } from "@hookform/resolvers/yup"
+import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../validation";
-import axiosinstance from "../config/axios config";
-import toast from "react-hot-toast";
-import { useState } from "react";
-import { AxiosError } from "axios";
-import { IErrorMessage } from "../interfaces";
-
-
 
 interface IFormInput {
   username: string;
@@ -20,110 +12,42 @@ interface IFormInput {
   password: string;
 }
 
+const RegisterPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInput>({
+    resolver: yupResolver(registerSchema),
+  });
 
+  //** Handelers
+  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
 
-
-const  RegisterPage=()=>{
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const { register, handleSubmit , formState:{errors} } = useForm<IFormInput>({
-    resolver: yupResolver(registerSchema)
-  })
-
-  // ** Handelrs
-
-  const onSubmit: SubmitHandler<IFormInput> = async(data) => {
-    console.log("DATA",data)
-    setIsLoading(true);
-    console.log(errors);
-    
-
-/*
-مراحل الـ Requist
-1- Pending => Loading
-2- fulfilled => Success (Optional)
-3- rejected => Faield (Optional)
-*/
-
-
-try {
-  // 2- fulfilled => Success (Optional)
-  const {status} = await axiosinstance.post("/auth/local/register", data)
-  console.log(status);
-  if(status === 200){
-    toast.success("Register Successfull you will navigate to the login page after 2s"),{
-      duration: 1500,
-      position: "top-center",
-      style: {
-        border: "1px solid #4ade80",
-        padding: "16px",
-        color: "#4ade80",
-      },
-      iconTheme: {
-        primary: "#4ade80",
-        secondary: "#ffffff",
-    }}
-    setTimeout(()=>{
-      navigate('/.')
-    },2000)
-  }
-} catch (error) {
-  // 3- rejected => Faield (Optional)
-  const errorObj = error as AxiosError<IErrorMessage>
-  toast.error(`${errorObj.response?.data.error.message}`,{
-    duration: 4000,
-    position: "top-center",
-    style: {
-      border: "1px solid #ef4444",
-      padding: "16px",
-      color: "#ef4444",
+  //**Renders
+  const renderregisterform = REGISTER_FORM.map(
+    ({ name, placeholder, type, validation }, idx) => {
+      return (
+        <div key={idx}>
+          <Input
+            type={type}
+            placeholder={placeholder}
+            {...register(name, validation)}
+          />
+          {errors[name] && <InputErrorMessage msg={errors[name]?.message} />}
+        </div>
+      );
     },
-    iconTheme: {
-      primary: "#ef4444",
-      secondary: "#ffffff",
-  }})
-    console.log(error);
-  }
-  finally{
-    setIsLoading(false);
-  }
-}
+  );
 
-
-
-
-  // Renders
-  const renderRegisterForm = REGISTER_FORM.map(({name,placeholder,type,validation},idx) =>{
-    return(
-      <div key={idx}>
-      <Input type={type} placeholder={placeholder} {...register(name , validation)}/>
-      {errors[name] && <InputErrorMessage msg={errors[name]?.message}/>}
-      </div>
-    )
-  }) 
-
-return (
-  <div className="max-w-md mx-auto">
-      <h2 className="mb-4 text-3xl font-semibold text-center">
+  return (
+    <div className="max-w-md mx-auto">
+      <h2 className="text-center mb-4 text-3xl font-semibold">
         Register to get access!
       </h2>
-
-      
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-
-      {renderRegisterForm}
-
-
-       <Button fullWidth isLoading={isLoading} >Register
-
-
-       </Button>
-                  <p className="text-center text-sm text-gray-500 space-x-2">
-          <span>have an account?</span>
-          <Link to={"/login"} className="underline text-indigo-600 font-semibold">
-            Login
-          </Link>
-        </p>
+        {renderregisterform}
+        <Button fullWidth>Register</Button>
       </form>
     </div>
   );

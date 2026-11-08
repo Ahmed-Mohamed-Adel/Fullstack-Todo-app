@@ -1,12 +1,11 @@
-interface IProps{
-    msg: undefined | string;
+interface IProps {
+  msg?: string;
 }
 
-const InputErrorMessage = ({msg} : IProps) => {
-    return(
-        msg ? <span className="text-red-500 text-sm mt-1">{msg}</span> : null
-    )
-
-}
+const InputErrorMessage = ({ msg }: IProps) => {
+  return msg ? (
+    <span className="text-red-700 font-semibold text-sm block">{msg}</span>
+  ) : null;
+};
 
 export default InputErrorMessage;
