@@ -3,7 +3,7 @@ import { VariantProps, cva } from "class-variance-authority";
 import { HTMLAttributes, ReactNode } from "react";
 
 const buttonVariants = cva(
-  "flex items-center justify-center rounded-md font-medium text-white duration-300 dark:text-black disabled:bg-indigo-400 disabled:hover:bg-indigo-400 disabled:cursor-not-allowed",
+  "justify-center flex items-center rounded-md font-medium text-white duration-300 dark:text-black disabled:bg-indigo-400 disabled:hover:bg-indigo-400 disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
@@ -31,37 +31,31 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 interface ButtonProps
-  extends HTMLAttributes<HTMLButtonElement>,
+  extends
+    HTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   children: ReactNode;
-  isLoading?: boolean;
-  type?: "submit" | "button" | "reset";
+  isLoading?: Boolean;
 }
-
 const Button = ({
   variant,
-  size,
   fullWidth,
-  isLoading,
+  size,
   className,
   children,
-  type,
+  isLoading,
   ...props
 }: ButtonProps) => {
   return (
     <button
-    
-      type={type}
-      className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+      className={cn(buttonVariants({ variant, fullWidth, size, className }))}
       {...props}
-      disabled={isLoading}
     >
       {children}
-
       {isLoading ? (
         <svg
           className="animate-spin mx-3 h-5 w-5 text-white"
